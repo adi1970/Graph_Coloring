@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum Graph</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        h1 {
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select {
+            width: calc(100% - 20px); /* Adjusted to allow for padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #4caf50; /* Highlight border on focus */
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #4caf50;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="checkbox"] {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        label.checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #555;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Spectrum Graph - A powerful tool to vizaulize your graph</h1>
+
+    <form method="post" action="/">
+        <label for="num_nodes">Number of Nodes:</label>
+        <input type="number" name="num_nodes" required>
+        <br>
+    
+        <label for="graph_type">Graph Type:</label>
+        <select name="graph_type" id="graph_type" required>
+            <option value="complete">Complete Graph</option>
+            <option value="random">Random Graph</option>
+        </select>
+        <br>
+    
+        <div id="probability_input" style="display: none;">
+            <label for="probability">Probability (for random graph):</label>
+            <input type="number" name="probability" step="0.01" value="0.5"> <!-- Set a default value, e.g., 0.5 -->
+            <br>
+        </div>
+    
+        <label for="coloring_algorithm">Coloring Algorithm:</label>
+        <select name="coloring_algorithm" required>
+            <option value="greedy">Greedy Coloring</option>
+            <option value="backtracking">Backtracking Coloring</option>
+        </select>
+        <br>
+        <button type="submit">Generate and Visualize</button>
+    </form>
+    
+    <script>
+        document.getElementById('graph_type').addEventListener('change', function() {
+            var probabilityInput = document.getElementById('probability_input');
+            probabilityInput.style.display = this.value === 'random' ? 'block' : 'none';
+        });
+    </script>
+    
+
+    {% if error %}
+        <p style="color: red; text-align: center;">{{ error }}</p>
+    {% endif %}
+
+    {% if plots %}
+        {% for algorithm, plot in plots.items() %}
+            <h2>{{ algorithm|capitalize }} Coloring</h2>
+            <img src="data:image/png;base64,{{ plot }}" alt="{{ algorithm|capitalize }} Coloring">
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
